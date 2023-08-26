@@ -251,6 +251,7 @@ jobs:
           /bin/bash -c "$(curl -fsSL \
           https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/CustomizationSelect.sh)" \
           no_auth \
+          high_carb_limit \
           customtypeone_looppatches \
           2002
 
