@@ -252,7 +252,6 @@ jobs:
           https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/CustomizationSelect.sh)" \
           no_auth \
           high_carb_limit \
-          live_activity \
           profiles
 
           # the final customization listed above CANNOT have a continuation character "\"
