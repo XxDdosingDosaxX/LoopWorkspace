@@ -181,6 +181,20 @@ platform :ios do
       end
     end
 
+    # Configure app group association for a bundle ID
+    def add_app_group(identifier, group_id)
+      bundle_id = Spaceship::ConnectAPI::BundleId.find(identifier)
+      return unless bundle_id
+      existing_caps = bundle_id.get_capabilities
+      ag_cap = existing_caps.find { |c| c.capability_type == Spaceship::ConnectAPI::BundleIdCapability::Type::APP_GROUPS }
+      unless ag_cap
+        bundle_id.create_capability(
+          Spaceship::ConnectAPI::BundleIdCapability::Type::APP_GROUPS,
+          settings: [{ key: "APP_GROUP_IDENTIFIERS", options: [{ key: group_id }] }]
+        )
+      end
+    end
+
     configure_bundle_id("Loop", "com.#{TEAMID}.loopkit.Loop", [
       Spaceship::ConnectAPI::BundleIdCapability::Type::APP_GROUPS,
       Spaceship::ConnectAPI::BundleIdCapability::Type::HEALTHKIT,
@@ -208,9 +222,12 @@ platform :ios do
       Spaceship::ConnectAPI::BundleIdCapability::Type::APP_GROUPS
     ])
 
-    configure_bundle_id("Watch Glucose Widget", "com.#{TEAMID}.loopkit.Loop.LoopWatch.GlucoseWidget", [
-      Spaceship::ConnectAPI::BundleIdCapability::Type::HEALTHKIT
-    ])
+    configure_bundle_id("Watch Glucose Widget", "com.#{TEAMID}.loopkit.Loop.LoopWatch.GlucoseWidget", [])
+
+    # Configure app group associations for watch widget data sharing
+    app_group = "group.com.#{TEAMID}.loopkit.LoopGroup"
+    add_app_group("com.#{TEAMID}.loopkit.Loop.LoopWatch.watchkitextension", app_group)
+    add_app_group("com.#{TEAMID}.loopkit.Loop.LoopWatch.GlucoseWidget", app_group)
     
   end
 
