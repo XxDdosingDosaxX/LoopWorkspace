@@ -53,6 +53,7 @@ platform :ios do
     
     match(
       type: "appstore",
+      force: true,
       git_basic_authorization: Base64.strict_encode64("#{GITHUB_REPOSITORY_OWNER}:#{GH_PAT}"),
       app_identifier: [
         "com.#{TEAMID}.loopkit.Loop", 
@@ -201,7 +202,8 @@ platform :ios do
 
     configure_bundle_id("WatchApp Extension", "com.#{TEAMID}.loopkit.Loop.LoopWatch.watchkitextension", [
       Spaceship::ConnectAPI::BundleIdCapability::Type::HEALTHKIT,
-      Spaceship::ConnectAPI::BundleIdCapability::Type::SIRIKIT
+      Spaceship::ConnectAPI::BundleIdCapability::Type::SIRIKIT,
+      Spaceship::ConnectAPI::BundleIdCapability::Type::APP_GROUPS
     ])
 
     configure_bundle_id("Loop Widget Extension", "com.#{TEAMID}.loopkit.Loop.LoopWidgetExtension", [
@@ -209,7 +211,7 @@ platform :ios do
     ])
 
     configure_bundle_id("Watch Glucose Widget", "com.#{TEAMID}.loopkit.Loop.LoopWatch.GlucoseWidget", [
-      Spaceship::ConnectAPI::BundleIdCapability::Type::HEALTHKIT
+      Spaceship::ConnectAPI::BundleIdCapability::Type::APP_GROUPS
     ])
     
   end
