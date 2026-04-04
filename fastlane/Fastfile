@@ -187,12 +187,16 @@ platform :ios do
       return unless bundle_id
       existing_caps = bundle_id.get_capabilities
       ag_cap = existing_caps.find { |c| c.capability_type == Spaceship::ConnectAPI::BundleIdCapability::Type::APP_GROUPS }
-      unless ag_cap
-        bundle_id.create_capability(
-          Spaceship::ConnectAPI::BundleIdCapability::Type::APP_GROUPS,
-          settings: [{ key: "APP_GROUP_IDENTIFIERS", options: [{ key: group_id }] }]
-        )
+      # Delete existing App Groups capability and recreate with correct group.
+      # The 'unless' guard was skipping already-existing caps that lacked the
+      # actual group association, causing provisioning profile mismatches.
+      if ag_cap
+        ag_cap.delete!
       end
+      bundle_id.create_capability(
+        Spaceship::ConnectAPI::BundleIdCapability::Type::APP_GROUPS,
+        settings: [{ key: "APP_GROUP_IDENTIFIERS", options: [{ key: group_id }] }]
+      )
     end
 
     configure_bundle_id("Loop", "com.#{TEAMID}.loopkit.Loop", [
